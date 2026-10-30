@@ -1,0 +1,77 @@
+name: Business Radar Agent
+
+on:
+  schedule:
+    - cron: '0 */8 * * *'   # Every 8 hours: 00:00, 08:00, 16:00 UTC
+  workflow_dispatch:          # Allow manual trigger from GitHub UI
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  discover-osm:
+    name: "Discover — OpenStreetMap (Free)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip install -r agents/requirements.txt
+      - name: Run OSM agent
+        run: python agents/osm_agent.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+  discover-google-maps:
+    name: "Discover — Google Maps Places API"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip install -r agents/requirements.txt
+      - name: Run Google Maps agent
+        run: python agents/google_maps_agent.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GOOGLE_PLACES_KEY: ${{ secrets.GOOGLE_PLACES_KEY }}
+
+  discover-instagram:
+    name: "Discover — Instagram Hashtag Monitor"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip install -r agents/requirements.txt
+      - name: Run Instagram agent
+        run: python agents/instagram_agent.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+  enrich-with-grok:
+    name: "Enrich — Grok AI API"
+    needs: [discover-osm, discover-google-maps, discover-instagram]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip install -r agents/requirements.txt
+      - name: Run Grok enrichment agent
+        run: python agents/grok_enrichment_agent.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
