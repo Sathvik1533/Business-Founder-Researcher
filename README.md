@@ -40,4 +40,4 @@ python osm_agent.py  # fastest, zero API cost
 See [tasks/prd-business-radar.md](./tasks/prd-business-radar.md) for full PRD and architecture diagram.
 
 ## Contributors
-- Karthik Bhatipurlu — contributions welcome!
+- Karthik Battiporlu — contributions welcome!
