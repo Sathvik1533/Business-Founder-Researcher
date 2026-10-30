@@ -7,17 +7,17 @@ import { StatsBar } from '@/components/StatsBar';
 import { FilterBar } from '@/components/FilterBar';
 import { BusinessPanel } from '@/components/BusinessPanel';
 import { AREA_COORDINATES } from '@/components/RadarMap';
-import { Radar, Radio, Github, RefreshCw, ExternalLink } from 'lucide-react';
+import { Radar, Radio, Github, ExternalLink } from 'lucide-react';
 
-// Dynamically import RadarMap with SSR disabled (MapLibre uses browser WebGL)
+// Dynamic import with SSR disabled for WebGL canvas
 const RadarMap = dynamic(
   () => import('@/components/RadarMap').then((mod) => mod.RadarMap),
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full flex flex-col items-center justify-center bg-gray-950 text-gray-400 gap-3">
-        <Radar className="w-8 h-8 text-blue-500 animate-spin" />
-        <span className="text-sm">Initializing Hyderabad WebGL Radar...</span>
+      <div className="w-full h-full flex flex-col items-center justify-center bg-clay-canvas text-clay-muted gap-3">
+        <Radar className="w-8 h-8 text-accent-blue animate-spin" />
+        <span className="text-xs font-medium tracking-wide">Loading Hyderabad MapLibre Vector Radar...</span>
       </div>
     ),
   }
@@ -40,7 +40,6 @@ export default function RadarPage() {
     source: 'all',
   });
 
-  // Fetch businesses from API
   const loadBusinesses = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -67,9 +66,7 @@ export default function RadarPage() {
     loadBusinesses();
   }, [loadBusinesses]);
 
-  // Handle outreach status changes
   const handleStatusChange = async (id: string, status: OutreachStatus, notes?: string) => {
-    // Optimistic UI update
     setBusinesses((prev) =>
       prev.map((b) => (b.id === id ? { ...b, outreach_status: status, outreach_notes: notes || b.outreach_notes } : b))
     );
@@ -88,7 +85,6 @@ export default function RadarPage() {
     }
   };
 
-  // Jump to specific area coordinates
   const handleAreaJump = (areaName: string) => {
     const coords = AREA_COORDINATES[areaName];
     if (coords) {
@@ -97,58 +93,58 @@ export default function RadarPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-950 overflow-hidden select-none">
-      {/* Top Header */}
-      <header className="h-14 border-b border-gray-800 bg-gray-900/90 backdrop-blur px-4 flex items-center justify-between z-20 shrink-0">
+    <div className="flex flex-col h-screen w-screen bg-clay-canvas overflow-hidden select-none">
+      {/* Top Porcelain Header */}
+      <header className="h-16 border-b border-clay-border/80 bg-white/95 backdrop-blur-md px-5 flex items-center justify-between z-20 shrink-0 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-blue-600/20 border border-blue-500/30 text-blue-400">
+          <div className="p-2.5 rounded-clay-sm bg-blue-50 text-accent-blue shadow-clay-btn border border-blue-100">
             <Radar className="w-5 h-5 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-bold text-white text-sm sm:text-base tracking-tight">
+              <h1 className="font-bold text-clay-text text-base tracking-tight">
                 Business Founder Radar
               </h1>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-medium hidden sm:inline">
-                Hyderabad MSME Intelligence
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-50 text-accent-blue border border-blue-200/80 font-semibold shadow-clay-pill hidden sm:inline">
+                Hyderabad MSME Pipeline
               </span>
             </div>
-            <div className="text-[11px] text-gray-400 flex items-center gap-2">
-              <span className="flex items-center gap-1 text-emerald-400">
-                <Radio className="w-3 h-3 animate-ping" /> Agent active
+            <div className="text-[11px] text-clay-muted flex items-center gap-2 font-medium">
+              <span className="flex items-center gap-1.5 text-emerald-700">
+                <Radio className="w-2.5 h-2.5 text-accent-emerald animate-ping" /> Scans Every 8h
               </span>
               <span>•</span>
-              <span>Crawls Google Maps, Instagram & OSM every 8 hours</span>
+              <span>Google Maps · Instagram · OpenStreetMap</span>
             </div>
           </div>
         </div>
 
-        {/* Header Right Actions */}
-        <div className="flex items-center gap-2">
+        {/* GitHub & Info Pill */}
+        <div className="flex items-center gap-2.5">
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 border border-gray-700 transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-clay-sm bg-white hover:bg-slate-50 text-xs font-semibold text-clay-text border border-clay-border shadow-clay-btn transition active:translate-y-0.5"
           >
-            <Github className="w-3.5 h-3.5" />
+            <Github className="w-3.5 h-3.5 text-slate-700" />
             <span className="hidden md:inline">GitHub Actions Cron</span>
-            <ExternalLink className="w-3 h-3 text-gray-500" />
+            <ExternalLink className="w-3 h-3 text-clay-faint" />
           </a>
         </div>
       </header>
 
-      {/* Stats KPI Bar */}
+      {/* KPI Stats Bar */}
       <StatsBar businesses={businesses} selectedArea={filters.area} />
 
-      {/* Interactive Filter Bar */}
+      {/* Filter Bar with Inset Search & Clay Selectors */}
       <FilterBar
         filters={filters}
         onChange={(updated) => setFilters((prev) => ({ ...prev, ...updated }))}
         onAreaJump={handleAreaJump}
       />
 
-      {/* Main Split Layout: Map (Left/Center) + Business List Panel (Right) */}
+      {/* Main Split Layout */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         {/* Left: Map */}
         <div className="flex-1 h-[50vh] md:h-full relative">
@@ -161,7 +157,7 @@ export default function RadarPage() {
         </div>
 
         {/* Right: Business CRM Discovery Panel */}
-        <div className="w-full md:w-[420px] lg:w-[460px] h-[50vh] md:h-full shrink-0 z-10 shadow-2xl">
+        <div className="w-full md:w-[420px] lg:w-[460px] h-[50vh] md:h-full shrink-0 z-10">
           <BusinessPanel
             businesses={businesses}
             selectedId={selectedBusiness?.id}

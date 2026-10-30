@@ -6,7 +6,6 @@ import {
   Instagram,
   Globe,
   Flame,
-  CheckCircle2,
   Clock,
   Sparkles,
   MapPin,
@@ -40,9 +39,9 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 85) return 'text-emerald-400 bg-emerald-950/60 border-emerald-800';
-    if (score >= 60) return 'text-amber-400 bg-amber-950/60 border-amber-800';
-    return 'text-gray-400 bg-gray-800 border-gray-700';
+    if (score >= 85) return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+    if (score >= 60) return 'text-amber-700 bg-amber-50 border-amber-200';
+    return 'text-slate-600 bg-slate-100 border-slate-200';
   };
 
   const isNew = Date.now() - new Date(business.first_seen_at).getTime() < 24 * 60 * 60 * 1000;
@@ -50,75 +49,75 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   return (
     <div
       onClick={onSelect}
-      className={`p-4 rounded-xl border transition-all cursor-pointer ${
+      className={`p-4 rounded-clay border transition-all cursor-pointer ${
         isSelected
-          ? 'bg-blue-950/30 border-blue-500 ring-1 ring-blue-500/50 shadow-lg'
-          : 'bg-gray-900/90 border-gray-800 hover:border-gray-700 hover:bg-gray-850'
+          ? 'bg-blue-50/70 border-accent-blue ring-2 ring-accent-blue/20 shadow-clay-card'
+          : 'bg-white border-clay-border/70 hover:border-clay-border shadow-clay-card hover:-translate-y-0.5'
       }`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-semibold text-white text-base leading-snug">{business.name}</h3>
+            <h3 className="font-semibold text-clay-text text-base leading-snug">{business.name}</h3>
             {isNew && (
-              <span className="px-1.5 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded flex items-center gap-1">
+              <span className="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-emerald-100 text-emerald-800 rounded-full flex items-center gap-1 shadow-sm">
                 <Sparkles className="w-2.5 h-2.5" /> New
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-            <span className="flex items-center gap-1 text-gray-300">
-              <MapPin className="w-3 h-3 text-red-400" /> {business.area}
+          <div className="flex items-center gap-2 text-xs text-clay-muted mt-1.5 font-medium">
+            <span className="flex items-center gap-1 text-clay-text">
+              <MapPin className="w-3.5 h-3.5 text-rose-500" /> {business.area}
             </span>
             <span>•</span>
-            <span className="text-gray-400">{business.category}</span>
+            <span className="text-clay-muted">{business.category}</span>
             <span>•</span>
-            <span className="text-gray-500 flex items-center gap-1">
+            <span className="text-clay-faint flex items-center gap-1 font-mono text-[11px]">
               <Clock className="w-3 h-3" /> {formatRecency(business.first_seen_at)}
             </span>
           </div>
         </div>
 
-        {/* Lead Score */}
+        {/* Lead Score Badge */}
         <div
-          className={`shrink-0 px-2 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 ${getScoreColor(
+          className={`shrink-0 px-2.5 py-1 rounded-clay-sm border text-xs font-bold flex items-center gap-1 shadow-clay-pill ${getScoreColor(
             business.lead_score
           )}`}
-          title="Lead Opportunity Score: Higher means hotter prospect without website or established marketing"
+          title="Lead Opportunity Score: 0-100 based on website absence, social activity & timing"
         >
-          <Flame className="w-3 h-3" />
+          <Flame className="w-3.5 h-3.5" />
           {business.lead_score}
         </div>
       </div>
 
-      {/* Description / Summary */}
+      {/* Description */}
       {business.description && (
-        <p className="text-xs text-gray-300 mt-2 line-clamp-2 leading-relaxed">
+        <p className="text-xs text-clay-text/80 mt-2.5 line-clamp-2 leading-relaxed">
           {business.description}
         </p>
       )}
 
-      {/* Grok AI Insight Pill */}
+      {/* Grok AI Brief Card */}
       {business.grok_summary && (
-        <div className="mt-2.5 p-2 rounded-lg bg-gray-800/80 border border-blue-900/40 text-[11px] text-blue-200/90 flex items-start gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
-          <div className="line-clamp-2 italic">{business.grok_summary}</div>
+        <div className="mt-3 p-2.5 rounded-clay-sm bg-blue-50/80 border border-blue-100/90 text-[11px] text-blue-900 flex items-start gap-2 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-accent-blue shrink-0 mt-0.5" />
+          <div className="line-clamp-2 leading-relaxed font-normal">{business.grok_summary}</div>
         </div>
       )}
 
-      {/* Outreach Action Toolbar */}
-      <div className="mt-3 pt-3 border-t border-gray-800/80 flex items-center justify-between gap-2 flex-wrap">
-        {/* Quick Contact Buttons */}
+      {/* Action Toolbar */}
+      <div className="mt-3.5 pt-3 border-t border-clay-border/60 flex items-center justify-between gap-2 flex-wrap">
+        {/* Contact buttons */}
         <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           {business.phone && (
             <a
               href={`tel:${business.phone}`}
               title={`Call ${business.phone}`}
-              className="p-1.5 rounded-md bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 flex items-center gap-1 text-xs transition"
+              className="px-2.5 py-1 rounded-clay-sm bg-white hover:bg-blue-50 text-accent-blue border border-blue-200/80 shadow-clay-btn flex items-center gap-1 text-xs font-medium transition active:translate-y-0.5"
             >
               <Phone className="w-3 h-3" />
-              <span className="hidden sm:inline">Call</span>
+              <span>Call</span>
             </a>
           )}
 
@@ -130,10 +129,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title="Open WhatsApp"
-              className="p-1.5 rounded-md bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 text-xs transition"
+              className="px-2.5 py-1 rounded-clay-sm bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-clay-btn flex items-center gap-1 text-xs font-medium transition active:translate-y-0.5"
             >
               <MessageCircle className="w-3 h-3" />
-              <span className="hidden sm:inline">WhatsApp</span>
+              <span>WhatsApp</span>
             </a>
           )}
 
@@ -143,10 +142,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               title={`@${business.instagram_handle}`}
-              className="p-1.5 rounded-md bg-pink-600/20 hover:bg-pink-600/30 text-pink-400 border border-pink-500/30 flex items-center gap-1 text-xs transition"
+              className="px-2 py-1 rounded-clay-sm bg-white hover:bg-pink-50 text-pink-700 border border-pink-200/80 shadow-clay-btn flex items-center gap-1 text-xs font-medium transition active:translate-y-0.5"
             >
               <Instagram className="w-3 h-3" />
-              <span className="hidden sm:inline">@{business.instagram_handle}</span>
+              <span>@{business.instagram_handle}</span>
             </a>
           )}
 
@@ -155,12 +154,12 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               href={business.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 flex items-center gap-1 text-xs transition"
+              className="p-1 rounded-clay-sm bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-clay-btn transition active:translate-y-0.5"
             >
-              <Globe className="w-3 h-3" />
+              <Globe className="w-3.5 h-3.5" />
             </a>
           ) : (
-            <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/10 text-amber-300/80 border border-amber-500/20">
+            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-200">
               No Website
             </span>
           )}
@@ -171,16 +170,16 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <select
             value={business.outreach_status}
             onChange={(e) => onStatusChange(e.target.value as OutreachStatus)}
-            className={`text-xs px-2 py-1 rounded-md border cursor-pointer outline-none font-medium ${
+            className={`text-xs px-2.5 py-1 rounded-clay-sm border cursor-pointer outline-none font-semibold shadow-clay-btn ${
               business.outreach_status === 'new'
-                ? 'bg-blue-900/30 text-blue-300 border-blue-800'
+                ? 'bg-blue-50 text-blue-700 border-blue-200'
                 : business.outreach_status === 'contacted'
-                ? 'bg-purple-900/30 text-purple-300 border-purple-800'
+                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
                 : business.outreach_status === 'interested'
-                ? 'bg-amber-900/30 text-amber-300 border-amber-800'
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
                 : business.outreach_status === 'closed'
-                ? 'bg-emerald-900/30 text-emerald-300 border-emerald-800'
-                : 'bg-gray-800 text-gray-400 border-gray-700'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-slate-100 text-slate-600 border-slate-200'
             }`}
           >
             <option value="new">🟢 New Lead</option>
@@ -192,8 +191,8 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         </div>
       </div>
 
-      {/* Outreach Notes Expandable */}
-      <div className="mt-2.5 pt-2 border-t border-gray-800/40 text-xs" onClick={(e) => e.stopPropagation()}>
+      {/* Outreach Notes Section */}
+      <div className="mt-2.5 pt-2 border-t border-clay-border/40 text-xs" onClick={(e) => e.stopPropagation()}>
         {isEditingNotes ? (
           <div className="flex items-center gap-1.5 mt-1">
             <input
@@ -201,14 +200,14 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               placeholder="e.g. Call at 4 PM, spoke with manager..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="flex-1 bg-gray-800 text-gray-200 text-xs px-2 py-1 rounded border border-gray-700 outline-none focus:border-blue-500"
+              className="flex-1 bg-white text-clay-text text-xs px-2.5 py-1 rounded-clay-sm border border-clay-border shadow-clay-pressed outline-none focus:border-accent-blue"
             />
             <button
               onClick={() => {
                 onStatusChange(business.outreach_status, notes);
                 setIsEditingNotes(false);
               }}
-              className="p-1 bg-blue-600 hover:bg-blue-500 text-white rounded transition"
+              className="p-1.5 bg-accent-blue text-white rounded-clay-sm shadow-clay-btn hover:bg-blue-700 transition"
             >
               <Send className="w-3 h-3" />
             </button>
@@ -216,10 +215,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         ) : (
           <div
             onClick={() => setIsEditingNotes(true)}
-            className="text-gray-400 hover:text-gray-300 cursor-pointer flex items-center justify-between text-[11px]"
+            className="text-clay-muted hover:text-clay-text cursor-pointer flex items-center justify-between text-[11px]"
           >
             <span>{business.outreach_notes ? `📝 "${business.outreach_notes}"` : '+ Add outreach call note'}</span>
-            <span className="text-[10px] text-gray-500 hover:underline">edit</span>
+            <span className="text-[10px] text-accent-blue hover:underline font-medium">edit</span>
           </div>
         )}
       </div>

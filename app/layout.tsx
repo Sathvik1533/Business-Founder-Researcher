@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Business Radar Hyderabad | Discover Newly Opened Businesses',
-  description: 'Automated intelligence radar detecting new businesses, cafes, boutiques, and brands launching across Hyderabad every 8 hours.',
+  title: 'Business Radar // Hyderabad — MSME Intelligence',
+  description: 'Continuous local radar identifying newly opened businesses, cafes, boutiques, and brands across Hyderabad.',
 };
 
 export default function RootLayout({
@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-gray-950 text-gray-100 antialiased min-h-screen">
+    <html lang="en">
+      <body className="bg-clay-canvas text-clay-text antialiased min-h-screen">
         {children}
       </body>
     </html>
